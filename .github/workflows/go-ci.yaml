@@ -1,0 +1,59 @@
+name: Go CI
+
+on:
+  pull_request:
+    paths:
+      - "go-app/**"
+      - ".github/workflows/go-ci.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.20, 1.21]
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2. Setup Go
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      # 3. Cache
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # 4. Install deps
+      - run: cd go-app && go mod tidy && go mod download
+
+      # 5. Lint
+      - name: Run Linter
+        run: |
+          cd go-app
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+          golangci-lint run ./...
+
+      # 6. Build
+      - run: cd go-app && go build ./...
+
+      # 7. Test with coverage
+      - run: cd go-app && go test -v -coverprofile=coverage.out ./...
+
+      # 8. Upload artifact (optional)
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-coverage
+          path: go-app/coverage.out
