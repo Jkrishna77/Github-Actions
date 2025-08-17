@@ -53,7 +53,7 @@ jobs:
 
       # 8. Upload artifact (optional)
       - name: Upload test coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: go-coverage
           path: go-app/coverage.out
