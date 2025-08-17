@@ -13,6 +13,11 @@ target/
 *.class
 *.log
 
+# Node
+node_modules/
+npm-debug.log
+
+
 # IDE / Editor
 .vscode/
 .idea/

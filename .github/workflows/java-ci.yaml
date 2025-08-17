@@ -3,10 +3,6 @@
 name: Java CI pipeline
 
 on:
-  push:
-    paths:
-      - "java-app/**"
-      - ".github/workflows/java-ci.yml"
   pull_request:
     paths:
       - "java-app/**"
