@@ -1,0 +1,29 @@
+# This workflow runs Java CI checks on pull requests affecting the java-app directory.
+# It sets up JDK 17, checks out the code, and builds the project using Maven.
+name: Java CI pipeline
+
+on:
+  pull_request:
+    paths:
+      - "java-app/**"
+      - ".github/workflow/java-ci.yaml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 3. Build with Maven
+      - name: Build with Maven
+        run: mvn -B clean install --file java-app/pom.xml

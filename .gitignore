@@ -8,6 +8,11 @@ __pycache__/
 venv/
 env/
 
+# Java / Maven
+target/
+*.class
+*.log
+
 # IDE / Editor
 .vscode/
 .idea/
